@@ -1,0 +1,9 @@
+[submodule "libs/TinyGSM"]
+	path = libs/TinyGSM
+	url = https://github.com/lalekz/TinyGSM.git
+[submodule "libs/UniversalTelegramBot"]
+	path = libs/UniversalTelegramBot
+	url = https://github.com/witnessmenow/Universal-Arduino-Telegram-Bot.git
+[submodule "libs/ArduinoJson"]
+	path = libs/ArduinoJson
+	url = https://github.com/bblanchon/ArduinoJson.git
