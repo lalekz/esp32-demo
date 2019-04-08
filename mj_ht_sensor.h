@@ -10,6 +10,9 @@ public:
   MjHtSensor(BLEAddress peerAddress);
 
   bool requestUpdate();
+  unsigned long updateTime() const { return updateTime_; }
+
+  bool available() const;
   float temperature() const { return temperature_; }
   float humidity() const { return humidity_; }
 
@@ -28,6 +31,7 @@ private:
   FreeRTOS::Semaphore semaphore_;
   float temperature_;
   float humidity_;
+  unsigned long updateTime_;
 };
 
 #endif

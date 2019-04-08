@@ -1,5 +1,6 @@
 #include "mj_ht_sensor.h"
 #include <BLEDevice.h>
+#include <Arduino.h>
 #include <cmath>
 
 static BLEUUID SERVICE_UUID("226c0000-6476-4566-7562-66734470666d");
@@ -10,10 +11,16 @@ MjHtSensor* MjHtSensor::instance_;
 
 MjHtSensor::MjHtSensor(BLEAddress peerAddress)
   : peerAddress_(peerAddress),
-    temperature_(INFINITY), humidity_(INFINITY)
+    temperature_(INFINITY), humidity_(INFINITY),
+    updateTime_(0)
 {
   client_ = BLEDevice::createClient();
   instance_ = this;
+}
+
+bool MjHtSensor::available() const
+{
+  return std::isfinite(temperature_) && std::isfinite(humidity_);
 }
 
 bool MjHtSensor::requestUpdate()
@@ -53,6 +60,7 @@ void MjHtSensor::notifyCallback(
   if (sscanf(data.c_str(), "T=%f H=%f", &temp, &hum) == 2) {
     instance_->temperature_ = temp;
     instance_->humidity_ = hum;
+    instance_->updateTime_ = millis();
     instance_->semaphore_.give();
   }
 }
