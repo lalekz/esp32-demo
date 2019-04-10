@@ -7,13 +7,17 @@
 TelegramBot::TelegramBot(Client& client)
   : bot_(BOT_TOKEN, client)
 {
+}
+
+void TelegramBot::begin()
+{
   Preferences pref;
   pref.begin("bot", true);
-  String subscribers = pref.getString("subscribers", "");
-  StreamString* stream = (StreamString*)&subscribers;
-  while (stream->available()) {
+  StreamString stream;
+  stream.print(pref.getString("subscribers"));
+  while (stream.available()) {
     subscribers_.insert(
-      stream->readStringUntil(','));
+      stream.readStringUntil(','));
   }
 }
 
@@ -37,10 +41,10 @@ void TelegramBot::processIncomingMessages()
 
       StreamString stream;
       for (const String& chatId : subscribers_) {
-        stream.printf("%s,", chatId);
+        stream.printf("%s,", chatId.c_str());
       }
       Preferences pref;
-      pref.begin("bot", true);
+      pref.begin("bot", false);
       pref.putString("subscribers", stream);
     }
     numNewMessages = bot_.getUpdates(bot_.last_message_received + 1);
@@ -50,6 +54,7 @@ void TelegramBot::processIncomingMessages()
 void TelegramBot::publish(const String& message)
 {
   for (const String& chatId : subscribers_) {
+    Serial.printf("Publishing data to chat %s\n", chatId.c_str());
     bot_.sendMessage(chatId, message, "");
   }
 }

@@ -9,6 +9,8 @@ class TelegramBot {
 public:
   TelegramBot(Client& client);
 
+  void begin();
+
   void processIncomingMessages();
 
   void publish(const String& message);

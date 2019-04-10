@@ -65,6 +65,7 @@ void setup()
   Serial.println("Starting ESP32 Demo");
 
   modemSerial.begin(57600, SERIAL_8N1, MODEM_TX_PIN, MODEM_RX_PIN);
+  bot.begin();
 
   BLEDevice::init("ESP32Demo");
   BLEDevice::setPower(ESP_PWR_LVL_P7);
